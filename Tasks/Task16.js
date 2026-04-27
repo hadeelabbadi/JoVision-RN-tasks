@@ -10,7 +10,10 @@ const Task16 = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Show" onPress={toggleName} />
+      <Button
+  title={showName ? "Hide" : "Show"}
+  onPress={toggleName}
+/>
 
       {showName && (
         <Text style={styles.text}>Hadeel</Text>
