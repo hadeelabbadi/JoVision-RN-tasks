@@ -23,7 +23,6 @@ const Task21 = () => {
   return (
     <View style={styles.container}>
       <Button title="Show" onPress={toggle} />
-
       {show && <MyFunctionPage />}
     </View>
   );
