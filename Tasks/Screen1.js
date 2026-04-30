@@ -5,26 +5,40 @@ import {
   FlatList,
   StyleSheet,
   TextInput,
+  Button,
 } from 'react-native';
 import { useState } from 'react';
 
 export default function Screen1({ navigation }) {
-  const users = [
+  const [users, setUsers] = useState([
     { id: '1', name: 'Hadeel' },
     { id: '2', name: 'Ali' },
-    { id: '3', name: 'Sara' },
-    { id: '4', name: 'Omar' },
-  ];
+  ]);
 
   const [query, setQuery] = useState('');
+  const [newName, setNewName] = useState('');
 
-  // فلترة حسب البحث (case-insensitive)
+  // فلترة
   const filtered = users.filter(u =>
     u.name.toLowerCase().includes(query.toLowerCase())
   );
 
+  // إضافة عنصر
+  const addUser = () => {
+    if (newName.trim() === '') return;
+
+    const newUser = {
+      id: Date.now().toString(),
+      name: newName,
+    };
+
+    setUsers([...users, newUser]);
+    setNewName('');
+  };
+
   return (
     <View style={styles.container}>
+      {/* search */}
       <TextInput
         style={styles.input}
         placeholder="Search..."
@@ -32,12 +46,19 @@ export default function Screen1({ navigation }) {
         onChangeText={setQuery}
       />
 
+      {/* add user */}
+      <TextInput
+        style={styles.input}
+        placeholder="Add new user"
+        value={newName}
+        onChangeText={setNewName}
+      />
+
+      <Button title="Add" onPress={addUser} />
+
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={
-          <Text style={styles.empty}>No results</Text>
-        }
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
@@ -54,31 +75,25 @@ export default function Screen1({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
+  container: { flex: 1, padding: 20 },
+
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 10,
   },
+
   card: {
     backgroundColor: '#4CAF50',
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
-    elevation: 5,
   },
+
   text: {
     color: 'white',
     fontSize: 18,
-  },
-  empty: {
-    textAlign: 'center',
-    marginTop: 20,
-    color: '#888',
   },
 });
