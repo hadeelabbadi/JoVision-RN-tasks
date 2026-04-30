@@ -1,8 +1,10 @@
-import { View, Button, TextInput } from 'react-native';
+import { View, Button, TextInput, Text } from 'react-native';
 import { useState } from 'react';
 
-export default function Screen1({ navigation }) {
+export default function Screen1({ navigation, route }) {
   const [name, setName] = useState('');
+
+  const returnedName = route.params?.name;
 
   return (
     <View>
@@ -18,6 +20,8 @@ export default function Screen1({ navigation }) {
           navigation.navigate('Screen2', { name })
         }
       />
+
+      {returnedName && <Text>Returned: {returnedName}</Text>}
     </View>
   );
 }
