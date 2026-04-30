@@ -1,20 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 
-const Screen2 = () => {
+export default function Screen2({ route }) {
+  const name = route.params?.name || 'Guest';
+
   return (
-    <View style={styles.container}>
-      <Text>Welcome to Screen 2 🎉</Text>
+    <View>
+      <Text>Welcome {name} 🚀</Text>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
-export default Screen2;
+}

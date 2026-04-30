@@ -1,23 +1,23 @@
-import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, Button, TextInput } from 'react-native';
+import { useState } from 'react';
 
-const Screen1 = ({ navigation }) => {
+export default function Screen1({ navigation }) {
+  const [name, setName] = useState('');
+
   return (
-    <View style={styles.container}>
+    <View>
+      <TextInput
+        placeholder="Enter your name"
+        value={name}
+        onChangeText={setName}
+      />
+
       <Button
-        title="Go to Screen 2"
-        onPress={() => navigation.navigate('Screen2')}
+        title="Go"
+        onPress={() =>
+          navigation.navigate('Screen2', { name })
+        }
       />
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
-export default Screen1;
+}
