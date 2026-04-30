@@ -18,12 +18,12 @@ export default function Screen1({ navigation }) {
   const [query, setQuery] = useState('');
   const [newName, setNewName] = useState('');
 
-  // فلترة
+  // 🔍 Search
   const filtered = users.filter(u =>
-    u.name.toLowerCase().includes(query.toLowerCase())
+    (u.name || '').toLowerCase().includes(query.toLowerCase())
   );
 
-  // إضافة عنصر
+  // ➕ Add
   const addUser = () => {
     if (newName.trim() === '') return;
 
@@ -36,9 +36,15 @@ export default function Screen1({ navigation }) {
     setNewName('');
   };
 
+  // ❌ Delete
+  const deleteUser = (id) => {
+    const newList = users.filter(user => user.id !== id);
+    setUsers(newList);
+  };
+
   return (
     <View style={styles.container}>
-      {/* search */}
+      {/* 🔍 Search */}
       <TextInput
         style={styles.input}
         placeholder="Search..."
@@ -46,7 +52,7 @@ export default function Screen1({ navigation }) {
         onChangeText={setQuery}
       />
 
-      {/* add user */}
+      {/* ➕ Add */}
       <TextInput
         style={styles.input}
         placeholder="Add new user"
@@ -56,18 +62,29 @@ export default function Screen1({ navigation }) {
 
       <Button title="Add" onPress={addUser} />
 
+      {/* 📋 List */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={
+          <Text style={styles.empty}>No users found</Text>
+        }
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() =>
-              navigation.navigate('Screen2', { name: item.name })
-            }
-          >
-            <Text style={styles.text}>{item.name}</Text>
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate('Screen2', { name: item.name })
+              }
+            >
+              <Text style={styles.text}>{item.name}</Text>
+            </TouchableOpacity>
+
+            <Button
+              title="Delete"
+              onPress={() => deleteUser(item.id)}
+            />
+          </View>
         )}
       />
     </View>
@@ -75,7 +92,10 @@ export default function Screen1({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
 
   input: {
     borderWidth: 1,
@@ -85,15 +105,29 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
   card: {
     backgroundColor: '#4CAF50',
-    padding: 20,
+    padding: 15,
     marginVertical: 10,
     borderRadius: 10,
+    flex: 1,
+    marginRight: 10,
   },
 
   text: {
     color: 'white',
     fontSize: 18,
+  },
+
+  empty: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#888',
   },
 });
