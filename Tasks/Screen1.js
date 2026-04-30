@@ -1,22 +1,30 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 
 export default function Screen1({ navigation }) {
-  const users = ['Hadeel', 'Ali', 'Sara', 'Omar'];
+  const users = [
+    { id: '1', name: 'Hadeel' },
+    { id: '2', name: 'Ali' },
+    { id: '3', name: 'Sara' },
+    { id: '4', name: 'Omar' },
+  ];
 
   return (
     <View>
-      {users.map((user, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() =>
-            navigation.navigate('Screen2', { name: user })
-          }
-        >
-          <Text style={{ fontSize: 20, margin: 10 }}>
-            {user}
-          </Text>
-        </TouchableOpacity>
-      ))}
+      <FlatList
+        data={users}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Screen2', { name: item.name })
+            }
+          >
+            <Text style={{ fontSize: 20, margin: 10 }}>
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 }

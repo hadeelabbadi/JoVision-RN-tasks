@@ -6,7 +6,6 @@ export default function Screen2({ route, navigation }) {
   return (
     <View>
       <Text>Profile of {name} 👤</Text>
-
       <Button title="Go Back" onPress={() => navigation.goBack()} />
     </View>
   );
