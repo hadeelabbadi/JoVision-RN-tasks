@@ -17,6 +17,7 @@ export default function Screen1({ navigation }) {
 
   const [query, setQuery] = useState('');
   const [newName, setNewName] = useState('');
+  const [editingId, setEditingId] = useState(null);
 
   // 🔍 Search
   const filtered = users.filter(u =>
@@ -42,6 +43,23 @@ export default function Screen1({ navigation }) {
     setUsers(newList);
   };
 
+  // ✏️ Start Edit
+  const startEdit = (user) => {
+    setNewName(user.name);
+    setEditingId(user.id);
+  };
+
+  // 💾 Save Edit
+  const saveEdit = () => {
+    const updated = users.map(user =>
+      user.id === editingId ? { ...user, name: newName } : user
+    );
+
+    setUsers(updated);
+    setEditingId(null);
+    setNewName('');
+  };
+
   return (
     <View style={styles.container}>
       {/* 🔍 Search */}
@@ -52,23 +70,23 @@ export default function Screen1({ navigation }) {
         onChangeText={setQuery}
       />
 
-      {/* ➕ Add */}
+      {/* ➕ Add / Edit */}
       <TextInput
         style={styles.input}
-        placeholder="Add new user"
+        placeholder="Enter name"
         value={newName}
         onChangeText={setNewName}
       />
 
-      <Button title="Add" onPress={addUser} />
+      <Button
+        title={editingId ? "Save" : "Add"}
+        onPress={editingId ? saveEdit : addUser}
+      />
 
       {/* 📋 List */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={
-          <Text style={styles.empty}>No users found</Text>
-        }
         renderItem={({ item }) => (
           <View style={styles.row}>
             <TouchableOpacity
@@ -80,10 +98,10 @@ export default function Screen1({ navigation }) {
               <Text style={styles.text}>{item.name}</Text>
             </TouchableOpacity>
 
-            <Button
-              title="Delete"
-              onPress={() => deleteUser(item.id)}
-            />
+            <View>
+              <Button title="Edit" onPress={() => startEdit(item)} />
+              <Button title="Delete" onPress={() => deleteUser(item.id)} />
+            </View>
           </View>
         )}
       />
@@ -92,10 +110,7 @@ export default function Screen1({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
+  container: { flex: 1, padding: 20 },
 
   input: {
     borderWidth: 1,
@@ -123,11 +138,5 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 18,
-  },
-
-  empty: {
-    textAlign: 'center',
-    marginTop: 20,
-    color: '#888',
   },
 });
