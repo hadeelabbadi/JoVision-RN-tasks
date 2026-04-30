@@ -5,14 +5,9 @@ export default function Screen2({ route, navigation }) {
 
   return (
     <View>
-      <Text>Welcome {name} 🚀</Text>
+      <Text>Profile of {name} 👤</Text>
 
-      <Button
-        title="Send Back"
-        onPress={() =>
-          navigation.navigate('Screen1', { name })
-        }
-      />
+      <Button title="Go Back" onPress={() => navigation.goBack()} />
     </View>
   );
 }

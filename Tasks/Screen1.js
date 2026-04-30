@@ -1,27 +1,22 @@
-import { View, Button, TextInput, Text } from 'react-native';
-import { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-export default function Screen1({ navigation, route }) {
-  const [name, setName] = useState('');
-
-  const returnedName = route.params?.name;
+export default function Screen1({ navigation }) {
+  const users = ['Hadeel', 'Ali', 'Sara', 'Omar'];
 
   return (
     <View>
-      <TextInput
-        placeholder="Enter your name"
-        value={name}
-        onChangeText={setName}
-      />
-
-      <Button
-        title="Go"
-        onPress={() =>
-          navigation.navigate('Screen2', { name })
-        }
-      />
-
-      {returnedName && <Text>Returned: {returnedName}</Text>}
+      {users.map((user, index) => (
+        <TouchableOpacity
+          key={index}
+          onPress={() =>
+            navigation.navigate('Screen2', { name: user })
+          }
+        >
+          <Text style={{ fontSize: 20, margin: 10 }}>
+            {user}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 }
