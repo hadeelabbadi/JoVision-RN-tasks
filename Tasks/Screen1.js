@@ -7,24 +7,46 @@ import {
   TextInput,
   Button,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Screen1({ navigation }) {
-  const [users, setUsers] = useState([
-    { id: '1', name: 'Hadeel' },
-    { id: '2', name: 'Ali' },
-  ]);
-
+  const [users, setUsers] = useState([]);
   const [query, setQuery] = useState('');
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState(null);
 
+  // 📥 Load users on start
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  const loadUsers = async () => {
+    try {
+      const data = await AsyncStorage.getItem('users');
+      if (data !== null) {
+        setUsers(JSON.parse(data));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 💾 Save users
+  const saveUsers = async (data) => {
+    try {
+      await AsyncStorage.setItem('users', JSON.stringify(data));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // 🔍 Search
-  const filtered = users.filter(u =>
+  const filtered = users.filter((u) =>
     (u.name || '').toLowerCase().includes(query.toLowerCase())
   );
 
-  // ➕ Add
+  // ➕ Add user
   const addUser = () => {
     if (newName.trim() === '') return;
 
@@ -33,29 +55,36 @@ export default function Screen1({ navigation }) {
       name: newName,
     };
 
-    setUsers([...users, newUser]);
+    const updated = [...users, newUser];
+    setUsers(updated);
+    saveUsers(updated);
     setNewName('');
   };
 
-  // ❌ Delete
+  // ❌ Delete user
   const deleteUser = (id) => {
-    const newList = users.filter(user => user.id !== id);
-    setUsers(newList);
+    const updated = users.filter((user) => user.id !== id);
+    setUsers(updated);
+    saveUsers(updated);
   };
 
-  // ✏️ Start Edit
+  // ✏️ Start edit
   const startEdit = (user) => {
     setNewName(user.name);
     setEditingId(user.id);
   };
 
-  // 💾 Save Edit
+  // 💾 Save edit
   const saveEdit = () => {
-    const updated = users.map(user =>
+    if (!editingId) return;
+
+    const updated = users.map((user) =>
       user.id === editingId ? { ...user, name: newName } : user
     );
 
     setUsers(updated);
+    saveUsers(updated);
+
     setEditingId(null);
     setNewName('');
   };
@@ -79,7 +108,7 @@ export default function Screen1({ navigation }) {
       />
 
       <Button
-        title={editingId ? "Save" : "Add"}
+        title={editingId ? 'Save' : 'Add'}
         onPress={editingId ? saveEdit : addUser}
       />
 
@@ -87,6 +116,9 @@ export default function Screen1({ navigation }) {
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={
+          <Text style={styles.empty}>No users found</Text>
+        }
         renderItem={({ item }) => (
           <View style={styles.row}>
             <TouchableOpacity
@@ -138,5 +170,11 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 18,
+  },
+
+  empty: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#888',
   },
 });
