@@ -1,4 +1,5 @@
 import {
+  Alert,
   View,
   Text,
   TouchableOpacity,
@@ -63,10 +64,26 @@ export default function Screen1({ navigation }) {
 
   // ❌ Delete user
   const deleteUser = (id) => {
-    const updated = users.filter((user) => user.id !== id);
-    setUsers(updated);
-    saveUsers(updated);
-  };
+  Alert.alert(
+    "Confirm Delete",
+    "Are you sure you want to delete this user?",
+    [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => {
+          const updated = users.filter(user => user.id !== id);
+          setUsers(updated);
+          saveUsers(updated);
+        },
+        style: "destructive",
+      },
+    ]
+  );
+};
 
   // ✏️ Start edit
   const startEdit = (user) => {
