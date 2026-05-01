@@ -1,5 +1,5 @@
-import Task42 from './Tasks/Task42';
+import ProjectNavigation from './Tasks/ProjectNavigation';
 
 export default function App() {
-  return <Task42 />;
+  return <ProjectNavigation />;
 }
