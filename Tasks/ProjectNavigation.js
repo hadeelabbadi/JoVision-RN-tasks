@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CameraScreen from './CameraScreen';
+import SensorsScreen from './SensorsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,9 +19,7 @@ export default function ProjectNavigation() {
       <Tab.Navigator>
         <Tab.Screen name="Camera" component={CameraScreen} />
 
-        <Tab.Screen name="Sensors">
-          {() => <Screen title="Sensors Screen" />}
-        </Tab.Screen>
+        <Tab.Screen name="Sensors" component={SensorsScreen} />
 
         <Tab.Screen name="Gallery">
           {() => <Screen title="Gallery Screen" />}
