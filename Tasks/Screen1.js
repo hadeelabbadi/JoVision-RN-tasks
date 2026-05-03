@@ -8,7 +8,6 @@ import {
   Alert,
 } from 'react-native';
 import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Screen1({ navigation }) {
   const [users, setUsers] = useState([]);
